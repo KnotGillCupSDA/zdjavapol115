@@ -11,11 +11,9 @@ public class PalindromeChecker {
 		int j = text.length() - 1;
 
 		while (i < text.length() && j >= 0 && i <= j) {
-			if (text.charAt(i) != text.charAt(j)) {
+			if (text.charAt(i++) != text.charAt(j--)) {
 				return false;
 			}
-			i++;
-			j--;
 		}
 
 		return true;
@@ -30,6 +28,17 @@ public class PalindromeChecker {
 		}
 		return reversedString.equals(text);
 	}
+
+	public static boolean isPalindromeDavid(String text) {
+		String palindrome = "";
+		char charAt;
+		for (int i = 1; i <= text.length(); i++) {
+			charAt = text.charAt(text.length() - i);
+			palindrome += charAt;
+		}
+		return text.equals(palindrome);
+	}
+
 
 	public static boolean isPalindromeStringBuilder(String text) {
 		return new StringBuilder(text).reverse().toString().equals(text);
