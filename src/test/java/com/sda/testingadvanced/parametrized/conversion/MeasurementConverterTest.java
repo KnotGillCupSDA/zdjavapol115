@@ -20,12 +20,11 @@ class MeasurementConverterTest {
 
 	@ParameterizedTest
 	@EnumSource(value = ConversionType.class,
-			names = {"METERS_TO_YARDS", "INCHES_TO_CENTIMETERS", "MILES_TO_KILOMETERS"})
+			names = { "METERS_TO_YARDS", "INCHES_TO_CENTIMETERS", "MILES_TO_KILOMETERS" })
 	void shouldCovertToHigherValue(ConversionType conversionType) {
-		double value = new Random().nextDouble();
+		double value = 10.345;
 		double convertedValue = new MeasurementConverter().convert(value, conversionType);
 		assertTrue(convertedValue > value);
 	}
-
 
 }
