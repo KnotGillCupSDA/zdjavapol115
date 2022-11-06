@@ -1,12 +1,12 @@
 package com.sda.testingadvanced.parametrized.conversion;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Random;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Test;
+import org.assertj.core.data.Offset;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -33,7 +33,7 @@ class MeasurementConverterTest {
 	}
 
 	@ParameterizedTest(name = "{index}: {3}")
-	@MethodSource("testData")
+	@MethodSource(value = { "testData", "cornerCases" })
 	void someOperationsShouldBeReversible(
 			ConversionType conversionType1,
 			ConversionType conversionType2,
@@ -42,7 +42,12 @@ class MeasurementConverterTest {
 		MeasurementConverter converter = new MeasurementConverter();
 		double firstConversionResult = converter.convert(originalValue, conversionType1);
 		double secondConversionResult = converter.convert(firstConversionResult, conversionType2);
-		assertEquals(originalValue, secondConversionResult, testFailMessage);
+
+		//assertEquals(originalValue, secondConversionResult, 0.01, testFailMessage);
+
+		assertThat(secondConversionResult)
+				.as(testFailMessage)
+				.isCloseTo(originalValue, Offset.offset(0.01));
 	}
 
 	public static Stream<Arguments> testData() {
@@ -77,6 +82,16 @@ class MeasurementConverterTest {
 						ConversionType.INCHES_TO_CENTIMETERS,
 						10.0,
 						"Centimeters to inches should be reversible")
+		);
+	}
+
+	public static Stream<Arguments> cornerCases() {
+		return Stream.of(
+				Arguments.of(
+						ConversionType.YARDS_TO_METERS,
+						ConversionType.METERS_TO_YARDS,
+						10234324321.0001,
+						"Should be close to")
 		);
 	}
 }
